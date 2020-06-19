@@ -1,19 +1,16 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import "normalize.css";
 import "./styles.scss";
 import questions from "./const";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Home from "./Home";
 
-class App extends Component {
+const App = () => {
   // const [result, setResult] = useState([]);
   // let currInd = 0;
   // const number = 2;
   // const [questions] = useState(questions);
-  state = {
-    questionBank: questions
-  };
-  // const [questionBank, setQuestionBank] = useState(questions);
+  const [questionBank, setQuestionBank] = useState([]);
 
   // let questionBank = questions.splice(0, 2);
   // useEffect(() => {
@@ -34,11 +31,10 @@ class App extends Component {
   //   setQuestionBank(questionBank);
   // }, questionBank);
 
-  handleNext = () => {
+  const handleNext = () => {
     // currInd = currInd + number;
-    this.setState({
-      questionBank: questions.splice(0, 2)
-    })
+    setQuestionBank(questions.splice(0, 2));
+    console.log(questionBank);
     // questionBank.splice(0, 2);
     // console.log(questionBank);
     // renderData();
@@ -47,11 +43,12 @@ class App extends Component {
     // alert('hello');
   };
 
-  handleAnswer = (val, answer) => {
+  const handleAnswer = (val, answer) => {
     if (answer === val) {
       // alert("True answer");
       // result = result + 1;
       console.log("true");
+      handleNext();
     } else {
       console.log("false");
       // alert("Wrong answer");
@@ -80,15 +77,13 @@ class App extends Component {
   //     })
   //   )
   // }
-  render() {
-    const {questionBank} = this.state;
-    return (
-      <Router>
-        <div className="App">
-          <header className="app-header">QuizBuilder</header>
-          <Link to="/home">Home</Link>
-          {/* { renderData() } */}
-          {questionBank.map((value, index) => {
+  return (
+    <Router>
+      <div className="App">
+        <header className="app-header">QuizBuilder</header>
+        <Link to="/home">Home</Link>
+        {/* { renderData() } */}
+        {questionBank.map((value, index) => {
           return (
             <div key={index}>
               <div className="question-title">{value.title}</div>
@@ -98,8 +93,8 @@ class App extends Component {
                     <div className="col-6 pt-4" key={ind}>
                       <div
                         className="answer"
-                        onClick={
-                          this.handleAnswer(val, questionBank[index].answer)
+                        onClick={() =>
+                          handleAnswer(val, questionBank[index].answer)
                         }
                       >
                         {val}
@@ -111,16 +106,15 @@ class App extends Component {
             </div>
           );
         })}
-        <button onClick={this.handleNext}>Next</button>
-          <Switch>
-            <Route path="/home">
-              <Home />
-            </Route>
-          </Switch>
-        </div>
-      </Router>
-    );
-  }
-}
+        <button onClick={() => handleNext()}>Next</button>
+        <Switch>
+          <Route path="/home">
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
+};
 
 export default App;
